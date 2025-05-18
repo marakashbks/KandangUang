@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kandang Uang</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(160deg, #1e1e2f, #2e2e40);
+      color: #ccc;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(50, 50, 80, 0.6);
+      backdrop-filter: blur(12px);
+      padding: 15px 20px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.2em;
+      flex: 1;
+      text-align: center;
+    }
+
+    .icon {
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+    }
+
+    .main-container {
+      padding: 20px 15px;
+    }
+
+    .menu-container {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(100,100,255,0.2);
+      backdrop-filter: blur(8px);
+    }
+
+    .menu-container h2 {
+      text-align: center;
+      margin: 0 0 15px 0;
+      font-size: 1em;
+      color: #bfbfff;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .menu-item {
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 12px 5px;
+      text-align: center;
+      font-size: 0.75em;
+      color: #ccc;
+      transition: transform 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-item:hover {
+      transform: translateY(-3px);
+      background: rgba(150, 150, 255, 0.15);
+    }
+
+    .menu-item .icon {
+      font-size: 1.8em;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sensor-container {
+      background: rgba(255,255,255,0.04);
+      padding: 12px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(100,100,255,0.2);
+      backdrop-filter: blur(10px);
+      margin-bottom: 20px;
+    }
+
+    .sensor-container h3 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 0.9em;
+      color: #bfbfff;
+    }
+
+    .sensor-items {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .sensor-item {
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 8px 5px;
+      text-align: center;
+      font-size: 0.7em;
+      box-shadow: inset 0 0 4px rgba(255,255,255,0.1);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sensor-item strong {
+      display: block;
+      font-size: 1em;
+      margin: 2px 0;
+    }
+
+    .navbar {
+      position: fixed;
+      bottom: 40px;
+      left: 0;
+      right: 0;
+      background: rgba(40, 40, 80, 0.6);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: center;
+      padding: 10px 0;
+      border-top: 1px solid #555;
+    }
+
+    .navbar-item {
+      color: #ccc;
+      text-align: center;
+      font-size: 0.75em;
+      padding: 10px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      transition: background 0.3s ease;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .navbar-item:hover {
+      background: rgba(150, 150, 255, 0.15);
+    }
+
+    .footer-note {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 0.7em;
+      color: #99aaff;
+      padding: 5px 0;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(5px);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="https://img.icons8.com/ios-filled/50/menu--v1.png" alt="menu" class="icon">
+    <h1>Kandang Uang</h1>
+    <img src="https://img.icons8.com/ios-filled/50/appointment-reminders--v1.png" alt="notif" class="icon">
+  </div>
+
+  <div class="main-container">
+    <div class="menu-container">
+      <h2>Menu Utama</h2>
+      <div class="menu-grid">
+        <div class="menu-item" onclick="window.location.href='hitunguntung.html'">
+          <div class="icon">💰</div>
+          <span>Hitung Profit</span>
+        </div>
+        <div class="menu-item">
+          <div class="icon">🍚</div>
+          <span>Hitung Pakan</span>
+        </div>
+        <div class="menu-item">
+          <div class="icon">📃</div>
+          <span>Update Data</span>
+        </div>
+        <div class="menu-item">
+          <div class="icon">📋</div>
+          <span>Cek Harga</span>
+        </div>
+        <div class="menu-item">
+          <div class="icon">ℹ️</div>
+          <span>Info</span>
+        </div>
+        <div class="menu-item">
+          <div class="icon">🤝</div>
+          <span>Mitra</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sensor-container">
+      <h3>Lingkungan & Monitoring</h3>
+      <div class="sensor-items">
+        <div class="sensor-item">
+          🌡️<br><strong>28°C</strong>
+        </div>
+        <div class="sensor-item">
+          💧<br><strong>65%</strong>
+        </div>
+        <div class="sensor-item">
+          🎥<br><strong><a href="#" style="color: #4fc3f7; text-decoration: none;">CCTV</a></strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="navbar">
+    <a href="index.html" class="navbar-item">🏠<br>Beranda</a>
+  </div>
+
+  <div class="footer-note">
+    © 2025 Kandang Uang. Novy25 Ident-Bks/LDL.
+  </div>
+</body>
+</html>
