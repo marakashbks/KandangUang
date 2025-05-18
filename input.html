@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1e1e2f" />
+  <title>Kalkulator Ternak Futuristik</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(160deg, #1e1e2f, #2e2e40);
+      color: #fff;
+      padding: 80px 20px 120px;
+      overflow-x: hidden;
+    }
+    .header {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(50, 50, 80, 0.6); backdrop-filter: blur(12px);
+      padding: 16px 20px; text-align: center;
+      font-size: 1.4em; color: #9f9fff; font-weight: bold;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3); z-index: 10;
+    }
+    .main-container { max-width: 600px; margin: auto; }
+    h2 {
+      font-size: 1.2em; margin-bottom: 20px;
+      color: #bfbfff; text-shadow: 0 0 5px #6666ff;
+    }
+    .form-group { margin-bottom: 20px; }
+    label {
+      display: block; margin-bottom: 6px;
+      color: #ddd; font-size: 0.9em;
+    }
+    input[type="number"] {
+      width: 100%; padding: 12px; border: none;
+      border-radius: 14px; background: rgba(255,255,255,0.05);
+      color: #fff; backdrop-filter: blur(6px);
+      font-size: 1em; box-shadow: inset 0 0 5px rgba(255,255,255,0.1);
+    }
+    input:focus {
+      outline: none;
+      box-shadow: 0 0 8px #66ccff;
+      background: rgba(255,255,255,0.08);
+    }
+    button {
+      width: 100%; padding: 14px;
+      background: linear-gradient(145deg, #5f5fff, #7676ff);
+      color: #fff; font-weight: bold; border: none;
+      border-radius: 14px;
+      box-shadow: 0 4px 16px rgba(100, 100, 255, 0.5);
+      margin-top: 10px; cursor: pointer; transition: all 0.3s ease;
+    }
+    button:hover { background: #6f6fff; transform: scale(1.02); }
+    .result {
+      background: rgba(255,255,255,0.05); border-radius: 16px;
+      padding: 20px; margin-top: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      backdrop-filter: blur(8px);
+      opacity: 0; transform: translateY(10px); transition: all 0.4s ease;
+    }
+    .result.show { opacity: 1; transform: translateY(0); }
+    table { width: 100%; margin-top: 10px; border-collapse: collapse; }
+    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #444; }
+    th { color: #aaaaff; }
+    .profit { color: #66ff99; font-weight: bold; }
+    .loss { color: #ff6666; font-weight: bold; }
+    .footer-note, .bottom-home {
+      position: fixed; width: 100%; text-align: center;
+      backdrop-filter: blur(6px); z-index: 10;
+    }
+    .footer-note {
+      bottom: 0; padding: 8px;
+      font-size: 0.75em; color: #ccc;
+      background: rgba(0,0,0,0.2);
+    }
+    .bottom-home { bottom: 40px; }
+    .home-btn {
+      display: inline-block; padding: 12px 18px;
+      border-radius: 20px; background: #6f6fff; color: white;
+      font-weight: bold; box-shadow: 0 0 12px rgba(100,100,255,0.6);
+      cursor: pointer;
+    }
+    .note {
+      font-size: 0.75em; color: #aaa;
+      text-align: center; margin-top: 30px; line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">Kalkulator Ternak</div>
+  <div class="main-container">
+    <h2>Perhitungan Keuntungan</h2>
+    <div class="form-group"><label>Jumlah Ayam</label><input type="number" id="jumlahAyam" value="100"></div>
+    <div class="form-group"><label>Harga DOC per Ekor</label><input type="number" id="hargaDOC" value="5000"></div>
+    <div class="form-group"><label>Berat Panen per Ekor (kg)</label><input type="number" id="beratPanen" value="1.5"></div>
+    <div class="form-group"><label>Harga Jual per Kg</label><input type="number" id="hargaJual" value="25000"></div>
+    <div class="form-group"><label>Total Pakan (kg)</label><input type="number" id="jumlahPakan" value="350"></div>
+    <div class="form-group"><label>Harga Pakan per Kg</label><input type="number" id="hargaPakan" value="8000"></div>
+    <div class="form-group"><label>Biaya Obat & Vitamin</label><input type="number" id="biayaObat" value="200000"></div>
+    <div class="form-group"><label>Biaya Operasional Lain</label><input type="number" id="biayaLain" value="300000"></div>
+    <button onclick="hitungKeuntungan()">Hitung Keuntungan</button>
+    <div id="hasil" class="result">
+      <h3>Hasil:</h3>
+      <table>
+        <tr><th>Komponen</th><th>Jumlah</th></tr>
+        <tr><td>Total Pendapatan</td><td id="pendapatan">-</td></tr>
+        <tr><td>Total Biaya</td><td id="biaya">-</td></tr>
+        <tr><td>Keuntungan / Rugi</td><td id="keuntungan">-</td></tr>
+      </table>
+    </div>
+    <div class="note">
+      * Estimasi perhitungan berdasarkan input. Hasil akhir bisa berbeda tergantung kondisi lapangan.
+    </div>
+  </div>
+  <div class="bottom-home">
+    <div class="home-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">Home</div>
+  </div>
+  <div class="footer-note">
+    © 2025 Sentuh Tanahku. Kementerian ATR/BPN.
+  </div>
+  <script>
+    function hitungKeuntungan() {
+      const ayam = +document.getElementById('jumlahAyam').value;
+      const hargaDOC = +document.getElementById('hargaDOC').value;
+      const berat = +document.getElementById('beratPanen').value;
+      const hargaJual = +document.getElementById('hargaJual').value;
+      const jumlahPakan = +document.getElementById('jumlahPakan').value;
+      const hargaPakan = +document.getElementById('hargaPakan').value;
+      const obat = +document.getElementById('biayaObat').value;
+      const lain = +document.getElementById('biayaLain').value;
+
+      const pendapatan = ayam * berat * hargaJual;
+      const biaya = (ayam * hargaDOC) + (jumlahPakan * hargaPakan) + obat + lain;
+      const hasil = pendapatan - biaya;
+
+      document.getElementById('pendapatan').textContent = formatRupiah(pendapatan);
+      document.getElementById('biaya').textContent = formatRupiah(biaya);
+      const el = document.getElementById('keuntungan');
+      el.textContent = formatRupiah(hasil);
+      el.className = hasil >= 0 ? 'profit' : 'loss';
+      document.getElementById('hasil').classList.add('show');
+    }
+
+    function formatRupiah(angka) {
+      return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+  </script>
+</body>
+</html>
