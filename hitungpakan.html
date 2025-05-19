@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoBroiler Calculator</title>
+    <style>
+        :root {
+            --primary: #00ff9d;
+            --secondary: #00b8ff;
+            --dark: #0a0a14;
+            --glass: rgba(20, 20, 40, 0.7);
+            --error: #ff3a5e;
+            --text: rgba(255, 255, 255, 0.9);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+            perspective: 1000px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                        0 0 0 1px rgba(255, 255, 255, 0.05),
+                        inset 0 0 20px rgba(0, 255, 157, 0.1);
+            padding: 2.5rem;
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) rotateX(1deg);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4),
+                        0 0 0 1px rgba(255, 255, 255, 0.1),
+                        inset 0 0 30px rgba(0, 255, 157, 0.15);
+        }
+
+        h2, h3, h4 {
+            font-weight: 600;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 255, 157, 0.2);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+        }
+
+        h4 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 1rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.8rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(10, 10, 20, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 255, 157, 0.3),
+                        inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 255, 157, 0.3),
+                        0 0 0 1px rgba(0, 255, 157, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 157, 0.4),
+                        0 0 0 1px rgba(0, 255, 157, 0.3);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.9em;
+            margin-top: 0.5rem;
+            display: none;
+            text-shadow: 0 0 8px rgba(255, 58, 94, 0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: rgba(10, 10, 20, 0.5);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            background: linear-gradient(135deg, rgba(0, 255, 157, 0.1), rgba(0, 184, 255, 0.1));
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .phase-timeline {
+            display: flex;
+            margin: 2rem 0;
+            height: 16px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+            background: rgba(10, 10, 20, 0.5);
+        }
+
+        .phase-starter { 
+            background: linear-gradient(90deg, #00ff9d, #00b8ff);
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+        }
+        .phase-grower { 
+            background: linear-gradient(90deg, #00b8ff, #008cff);
+            box-shadow: 0 0 10px rgba(0, 184, 255, 0.5);
+        }
+        .phase-finisher { 
+            background: linear-gradient(90deg, #008cff, #0062ff);
+            box-shadow: 0 0 10px rgba(0, 140, 255, 0.5);
+        }
+
+        .nutrition-card {
+            background: rgba(10, 10, 20, 0.5);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        ul {
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        strong {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            th, td {
+                padding: 0.8rem;
+                font-size: 0.9em;
+            }
+        }
+
+        /* 3D Glass Effect */
+        .glass-effect {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-effect::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.05) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(30deg);
+            pointer-events: none;
+            animation: shine 6s infinite;
+        }
+
+        @keyframes shine {
+            0%, 100% { transform: rotate(30deg) translate(-30%, -30%); }
+            50% { transform: rotate(30deg) translate(30%, 30%); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card glass-effect">
+            <h2>NeoBroiler Calculator</h2>
+            
+            <div class="input-group">
+                <label>Target Bobot Akhir (kg):</label>
+                <input type="number" step="0.1" id="targetBobot" value="2.5" min="1" max="5">
+                <span class="error-message" id="errorBobot">Target bobot harus 1-5 kg!</span>
+            </div>
+            
+            <div class="input-group">
+                <label>FCR (Rasio Konversi Pakan):</label>
+                <input type="number" step="0.1" id="fcr" value="1.6" min="1.5" max="2.0">
+                <span class="error-message" id="errorFCR">FCR harus 1.5-2.0!</span>
+            </div>
+            
+            <div class="input-group">
+                <label>Jumlah Ayam (ekor):</label>
+                <input type="number" id="jumlahAyam" value="1000" min="1">
+                <span class="error-message" id="errorJumlah">Jumlah ayam minimal 1!</span>
+            </div>
+            
+            <div class="input-group">
+                <label>Usia Panen (hari):</label>
+                <input type="number" id="usia" min="1" max="42" value="35">
+                <span class="error-message" id="errorUsia">Usia harus 1-42 hari!</span>
+            </div>
+            
+            <button onclick="hitungKebutuhanPakan()">Hitung Kebutuhan</button>
+
+            <div id="hasilPerhitungan" style="display: none">
+                <h3>Hasil Perhitungan</h3>
+                
+                <div class="phase-timeline" id="phaseTimeline"></div>
+                
+                <div class="nutrition-card">
+                    <h4>Rekomendasi Komposisi Nutrisi:</h4>
+                    <ul>
+                        <li><strong>Starter (Hari 1-14):</strong> Protein 22-24%, Lemak 5-7%, Serat 3-5%</li>
+                        <li><strong>Grower (Hari 15-28):</strong> Protein 20-22%, Lemak 6-8%, Serat 4-6%</li>
+                        <li><strong>Finisher (Hari 29-42):</strong> Protein 18-20%, Lemak 7-9%, Serat 5-7%</li>
+                    </ul>
+                </div>
+
+                <p style="margin: 1.5rem 0; font-size: 1.2em;"><strong>Total Kebutuhan Pakan:</strong> <span id="totalPakan" style="color: var(--primary);"></span></p>
+                
+                <h4>Rincian per Hari:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Hari</th>
+                            <th>Fase</th>
+                            <th>Pakan Harian (kg/ekor)</th>
+                            <th>Kumulatif</th>
+                            <th>Total Pakan</th>
+                            <th>Total Kumulatif</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatAngka(num) {
+            return new Intl.NumberFormat('id-ID', { 
+                maximumFractionDigits: 3 
+            }).format(num);
+        }
+
+        function updatePhaseTimeline(days) {
+            const timeline = document.getElementById('phaseTimeline');
+            timeline.innerHTML = '';
+            
+            const phases = [
+                { type: 'starter', days: Math.min(days, 14) },
+                { type: 'grower', days: Math.max(0, Math.min(days, 28) - 14) },
+                { type: 'finisher', days: Math.max(0, days - 28) }
+            ];
+
+            phases.forEach(phase => {
+                if(phase.days > 0) {
+                    const div = document.createElement('div');
+                    div.className = `phase-${phase.type}`;
+                    div.style.width = `${(phase.days/days)*100}%`;
+                    div.style.height = '100%';
+                    div.title = `Fase ${phase.type.charAt(0).toUpperCase() + phase.type.slice(1)} (${phase.days} hari)`;
+                    timeline.appendChild(div);
+                }
+            });
+        }
+
+        function validateInputs() {
+            let valid = true;
+            const inputs = [
+                { id: 'targetBobot', error: 'errorBobot', min: 1, max: 5 },
+                { id: 'fcr', error: 'errorFCR', min: 1.5, max: 2.0 },
+                { id: 'jumlahAyam', error: 'errorJumlah', min: 1 },
+                { id: 'usia', error: 'errorUsia', min: 1, max: 42 }
+            ];
+
+            inputs.forEach(input => {
+                const element = document.getElementById(input.id);
+                const error = document.getElementById(input.error);
+                const value = parseFloat(element.value);
+                
+                if(isNaN(value) || 
+                   value < input.min || 
+                   (input.max && value > input.max)) {
+                    error.style.display = 'block';
+                    element.style.borderColor = 'var(--error)';
+                    element.style.boxShadow = '0 0 0 2px rgba(255, 58, 94, 0.3)';
+                    valid = false;
+                } else {
+                    error.style.display = 'none';
+                    element.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                    element.style.boxShadow = 'inset 0 2px 10px rgba(0, 0, 0, 0.2)';
+                }
+            });
+
+            return valid;
+        }
+
+        function hitungKebutuhanPakan() {
+            if(!validateInputs()) return;
+
+            const targetBobot = parseFloat(document.getElementById('targetBobot').value);
+            const fcr = parseFloat(document.getElementById('fcr').value);
+            const jumlahAyam = parseInt(document.getElementById('jumlahAyam').value);
+            const usiaHari = parseInt(document.getElementById('usia').value);
+
+            const totalPakanPerEkor = targetBobot * fcr;
+            const totalPakan = totalPakanPerEkor * jumlahAyam;
+
+            document.getElementById('totalPakan').textContent = 
+                `${formatAngka(totalPakan)} kg (${formatAngka(totalPakan/1000)} ton)`;
+            
+            let tabelBody = "";
+            let kumulatifPerEkor = 0;
+            let totalKumulatif = 0;
+            
+            for (let hari = 1; hari <= usiaHari; hari++) {
+                let fase = "";
+                let pakanHarian = 0;
+                
+                if (hari <= 14) {
+                    fase = "Starter";
+                    pakanHarian = (0.350 - 0.150) / (14 - 7) * Math.min(hari, 14);
+                } else if (hari <= 28) {
+                    fase = "Grower";
+                    pakanHarian = 0.350 + (1.200 - 0.350) / (28 - 14) * (hari - 14);
+                } else {
+                    fase = "Finisher";
+                    pakanHarian = 1.200 + (1.600 - 1.200) / (35 - 28) * (hari - 28);
+                }
+                
+                kumulatifPerEkor += pakanHarian;
+                const totalPakanHarian = pakanHarian * jumlahAyam;
+                totalKumulatif += totalPakanHarian;
+                
+                if (hari % 3 === 0 || hari === 1 || hari === usiaHari) {
+                    tabelBody += `<tr>
+                        <td>${hari}</td>
+                        <td>${fase}</td>
+                        <td>${formatAngka(pakanHarian)}</td>
+                        <td>${formatAngka(kumulatifPerEkor)}</td>
+                        <td>${formatAngka(totalPakanHarian)} kg</td>
+                        <td>${formatAngka(totalKumulatif)} kg</td>
+                    </tr>`;
+                }
+            }
+
+            document.getElementById('tabelBody').innerHTML = tabelBody;
+            document.getElementById('hasilPerhitungan').style.display = 'block';
+            updatePhaseTimeline(usiaHari);
+        }
+
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', validateInputs);
+        });
+    </script>
+</body>
+</html>
